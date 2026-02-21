@@ -603,6 +603,111 @@ body {
   margin: 0 auto;
 }
 
+/* ========== NEWS / NOTICE ========== */
+.news {
+  background: var(--white);
+  padding: 60px 24px;
+}
+
+.news-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.news-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.news-header .section-label {
+  margin-bottom: 0;
+}
+
+.news-header h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 1.1rem;
+  color: var(--rich-brown);
+}
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.news-item {
+  display: flex;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--soft-beige);
+  align-items: baseline;
+}
+
+.news-item:first-child {
+  border-top: 1px solid var(--soft-beige);
+}
+
+.news-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
+.news-tag {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.news-tag-info {
+  background: var(--soft-beige);
+  color: var(--deep-brown);
+}
+
+.news-tag-important {
+  background: rgba(192, 139, 126, 0.15);
+  color: var(--accent-rose);
+}
+
+.news-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.news-empty {
+  text-align: center;
+  padding: 32px 0;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+  .news-item {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .news-date-tag {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .news {
+    padding: 40px 20px;
+  }
+}
+
 /* ========== CONCEPT ========== */
 .concept {
   background: var(--white);
@@ -1528,13 +1633,26 @@ body {
 
   .hero-content {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 32px;
     padding-top: 100px;
+    padding-bottom: 40px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .hero-text {
+    padding: 0 24px;
   }
 
   .hero-visual {
-    max-width: 320px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 20px;
+  }
+
+  .hero-image-main {
+    border-radius: 24px;
+    aspect-ratio: 3/2;
   }
 
   .concept-grid,
@@ -1724,6 +1842,33 @@ body {
     <div class="scroll-indicator">
       <span>scroll</span>
       <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- News / お知らせ -->
+  <section class="news" id="news">
+    <div class="news-inner reveal">
+      <div class="news-header">
+        <p class="section-label">News</p>
+        <h2>お知らせ</h2>
+      </div>
+      <div class="news-list" id="newsList">
+        <div class="news-item">
+          <span class="news-date">2025.02.20</span>
+          <span class="news-tag news-tag-important">重要</span>
+          <span class="news-text">3月の定休日：3/6（木）、3/12（水）、3/13（木）、3/20（木）、3/26（水）、3/27（木）</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2025.02.01</span>
+          <span class="news-tag news-tag-info">お知らせ</span>
+          <span class="news-text">visino mano（ネイルサロン）は本店より徒歩1分の場所へ移転いたしました。</span>
+        </div>
+        <div class="news-item">
+          <span class="news-date">2025.01.05</span>
+          <span class="news-tag news-tag-info">お知らせ</span>
+          <span class="news-text">本年もどうぞよろしくお願いいたします。通常営業は1月7日（火）からとなります。</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2399,6 +2544,133 @@ function initReveal() {
 }
 
 initReveal();
+</script>
+
+<script>
+// ===== DYNAMIC DATA LOADING =====
+async function loadSiteData() {
+  let data = null;
+  
+  // Priority 1: localStorage (from admin panel)
+  const stored = localStorage.getItem('visino-site-data');
+  if (stored) {
+    try { data = JSON.parse(stored); } catch(e) {}
+  }
+  
+  // Priority 2: site-data.json file
+  if (!data) {
+    try {
+      const res = await fetch('site-data.json');
+      if (res.ok) data = await res.json();
+    } catch(e) {}
+  }
+  
+  if (data) applySiteData(data);
+}
+
+function applySiteData(d) {
+  // === NEWS ===
+  if (d.news && d.news.length > 0) {
+    const newsEl = document.getElementById('newsList');
+    if (newsEl) {
+      newsEl.innerHTML = d.news.map(item => `
+        <div class="news-item">
+          <span class="news-date">${esc(item.date)}</span>
+          <span class="news-tag news-tag-${item.tagType || 'info'}">${esc(item.tag)}</span>
+          <span class="news-text">${esc(item.text)}</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // === FAQ ===
+  if (d.faq && d.faq.length > 0) {
+    const faqList = document.querySelector('.faq-list');
+    if (faqList) {
+      faqList.innerHTML = d.faq.map(item => `
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-q-label">Q</span>
+            <span class="faq-q-text">${esc(item.question)}</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>${esc(item.answer)}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+
+  // === STAFF ===
+  if (d.staff && d.staff.length > 0) {
+    const staffGrid = document.querySelector('.staff-grid');
+    if (staffGrid) {
+      staffGrid.innerHTML = d.staff.map(s => `
+        <div class="staff-card reveal visible">
+          <div class="staff-avatar">👤</div>
+          <p class="staff-name-en">${esc(s.nameEn)}</p>
+          <p class="staff-role">${esc(s.role)}</p>
+          <p class="staff-desc">${esc(s.description)}</p>
+        </div>
+      `).join('');
+    }
+  }
+
+  // === SITE INFO ===
+  if (d.siteInfo) {
+    const si = d.siteInfo;
+    // Update access section
+    const accessItems = document.querySelectorAll('.access-item-text');
+    if (accessItems.length >= 3) {
+      if (si.postalCode || si.address) {
+        accessItems[0].innerHTML = `${si.postalCode ? '〒' + esc(si.postalCode) + '<br>' : ''}${esc(si.address)}${si.accessNote ? '<small>' + esc(si.accessNote) + '</small>' : ''}`;
+      }
+      if (si.hoursWeekday || si.hoursWeekend) {
+        accessItems[1].innerHTML = `平日 ${esc(si.hoursWeekday)}<br>土日祝 ${esc(si.hoursWeekend)}${si.closedDays ? '<small>※' + esc(si.closedDays) + '</small>' : ''}`;
+      }
+      if (si.phoneKogao || si.phoneNail) {
+        accessItems[2].innerHTML = `小顔矯正: ${esc(si.phoneKogao)}<br>ネイル (visino mano): ${esc(si.phoneNail)}`;
+      }
+    }
+    // Update CTA phone links
+    document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+      if (a.textContent.includes('090') && si.phoneKogao) {
+        a.href = 'tel:' + si.phoneKogao.replace(/-/g, '');
+        a.textContent = '📞 ' + si.phoneKogao;
+      }
+    });
+  }
+
+  // === KOGAO PRICES ===
+  if (d.kogao) {
+    const kg = d.kogao;
+    // Update price displays on home page service card
+    const priceAmounts = document.querySelectorAll('.price-amount');
+    if (priceAmounts.length > 0 && kg.price) {
+      priceAmounts[0].textContent = kg.price;
+    }
+    // Update price table on kogao page
+    const priceValues = document.querySelectorAll('.price-value');
+    if (priceValues.length >= 3) {
+      priceValues[0].innerHTML = `¥${esc(kg.price)} <small>${esc(kg.priceTax)}</small>`;
+      priceValues[1].innerHTML = `¥${esc(kg.bridalPrice)} <small>${esc(kg.bridalPriceTax)}</small>`;
+      priceValues[2].innerHTML = `¥${esc(kg.referralDiscount)} OFF`;
+    }
+  }
+}
+
+function esc(s) { 
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Load data on page ready
+loadSiteData();
 </script>
 
 </body>
