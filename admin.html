@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>visino ebisu | 管理画面</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
@@ -10,781 +10,841 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --cream: #FAF6F1;
-  --beige: #F0E8DD;
-  --taupe: #C4B5A4;
-  --brown: #5C4A3A;
-  --dark: #3D2E22;
-  --rose: #C08B7E;
-  --rose-light: #D4A99A;
-  --sage: #A8B5A0;
-  --text: #3D2E22;
-  --text-sub: #7A6B5D;
-  --text-light: #9B8E82;
-  --white: #FFFFFF;
-  --red: #D4564E;
-  --green: #5CA05C;
+  --cream: #FAF6F1; --beige: #F0E8DD; --taupe: #C4B5A4;
+  --brown: #5C4A3A; --dark: #3D2E22;
+  --rose: #C08B7E; --rose-light: #D4A99A; --sage: #A8B5A0;
+  --text: #3D2E22; --text-sub: #7A6B5D; --text-light: #9B8E82;
+  --white: #FFFFFF; --red: #D4564E; --green: #5CA05C;
   --shadow: 0 2px 16px rgba(61,46,34,0.08);
+  --radius: 14px;
 }
 
 body {
   font-family: 'Zen Kaku Gothic New', sans-serif;
-  font-weight: 400;
-  color: var(--text);
-  background: var(--beige);
-  line-height: 1.7;
-  min-height: 100vh;
+  font-weight: 400; color: var(--text);
+  background: var(--beige); line-height: 1.7;
+  min-height: 100vh; padding-bottom: 80px;
 }
 
 /* ===== HEADER ===== */
-.admin-header {
-  background: var(--dark);
-  color: var(--cream);
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+.header {
+  background: var(--dark); color: var(--cream);
+  padding: 14px 20px; display: flex;
+  align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
 }
-
-.admin-header h1 {
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-}
-
-.admin-header h1 span {
-  font-weight: 300;
-  opacity: 0.6;
-  margin-left: 8px;
-  font-size: 0.8rem;
-}
-
-.admin-actions {
-  display: flex;
-  gap: 12px;
-}
-
-/* ===== BUTTONS ===== */
-.btn-save {
-  background: var(--green);
-  color: white;
-  border: none;
-  padding: 10px 28px;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.05em;
-}
-
-.btn-save:hover { background: #4a8f4a; transform: translateY(-1px); }
-
+.header h1 { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.06em; }
+.header h1 small { font-weight: 300; opacity: 0.5; font-size: 0.75rem; margin-left: 6px; }
+.header-actions { display: flex; gap: 8px; }
 .btn-export {
-  background: transparent;
-  color: var(--cream);
-  border: 1px solid rgba(250,246,241,0.3);
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: transparent; color: var(--cream);
+  border: 1px solid rgba(250,246,241,0.25);
+  padding: 8px 14px; border-radius: 8px;
+  font-family: inherit; font-size: 0.75rem;
+  cursor: pointer; transition: all 0.2s;
 }
-
 .btn-export:hover { background: rgba(250,246,241,0.1); }
 
-/* ===== LAYOUT ===== */
-.admin-body {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 32px 24px 80px;
+/* ===== BOTTOM NAV (mobile tabs) ===== */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white); z-index: 100;
+  display: flex; border-top: 1px solid var(--beige);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
 }
-
-/* ===== TABS ===== */
-.tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 28px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.tab {
-  padding: 12px 24px;
-  border-radius: 12px 12px 0 0;
-  background: var(--white);
-  border: none;
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 400;
-  color: var(--text-sub);
-  cursor: pointer;
-  transition: all 0.2s;
+.bottom-nav .tab {
+  flex: 1; min-width: 0; padding: 10px 4px 12px;
+  background: none; border: none; font-family: inherit;
+  font-size: 0.6rem; color: var(--text-light);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; cursor: pointer; transition: all 0.2s;
   white-space: nowrap;
-  opacity: 0.6;
 }
+.bottom-nav .tab-icon { font-size: 1.2rem; }
+.bottom-nav .tab.active { color: var(--rose); font-weight: 500; }
+.bottom-nav .tab.active .tab-icon { transform: scale(1.1); }
 
-.tab.active {
-  background: var(--white);
-  color: var(--text);
-  font-weight: 500;
-  opacity: 1;
-  box-shadow: var(--shadow);
+/* ===== SAVE BUTTON (floating) ===== */
+.save-float {
+  position: fixed; bottom: 72px; right: 16px; z-index: 99;
+  background: var(--green); color: white;
+  border: none; padding: 14px 28px; border-radius: 50px;
+  font-family: inherit; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; box-shadow: 0 4px 20px rgba(92,160,92,0.4);
+  transition: all 0.2s; letter-spacing: 0.05em;
 }
-
-.tab:hover { opacity: 0.9; }
+.save-float:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(92,160,92,0.5); }
+.save-float:active { transform: scale(0.96); }
 
 /* ===== PANELS ===== */
-.panel {
-  display: none;
-  background: var(--white);
-  border-radius: 0 16px 16px 16px;
-  padding: 36px;
+.panel-container {
+  max-width: 700px; margin: 0 auto; padding: 20px 16px 100px;
+}
+.panel { display: none; }
+.panel.active { display: block; }
+.panel-title {
+  font-size: 1.05rem; font-weight: 500;
+  color: var(--dark); margin-bottom: 4px;
+}
+.panel-desc {
+  font-size: 0.78rem; color: var(--text-light); margin-bottom: 24px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--white); border-radius: var(--radius);
+  padding: 24px 20px; margin-bottom: 16px;
   box-shadow: var(--shadow);
 }
-
-.panel.active { display: block; }
-
-.panel-title {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--dark);
-  margin-bottom: 8px;
+.card-title {
+  font-size: 0.82rem; font-weight: 500; color: var(--dark);
+  margin-bottom: 16px; display: flex; align-items: center;
+  justify-content: space-between;
 }
 
-.panel-desc {
-  font-size: 0.82rem;
-  color: var(--text-light);
-  margin-bottom: 28px;
-}
-
-/* ===== FORM FIELDS ===== */
-.field-group {
-  margin-bottom: 24px;
-}
-
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
+/* ===== FORM FIELDS (mobile-optimized) ===== */
+.field { margin-bottom: 18px; }
 .field-label {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--text-sub);
-  margin-bottom: 6px;
-  letter-spacing: 0.05em;
+  display: block; font-size: 0.75rem; font-weight: 500;
+  color: var(--text-sub); margin-bottom: 5px; letter-spacing: 0.04em;
 }
-
 .field-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid var(--beige);
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 0.88rem;
-  color: var(--text);
-  background: var(--cream);
-  transition: all 0.2s;
-  outline: none;
+  width: 100%; padding: 14px 16px;
+  border: 1.5px solid var(--beige); border-radius: 10px;
+  font-family: inherit; font-size: 16px;  /* 16px prevents iOS zoom */
+  color: var(--text); background: var(--cream);
+  transition: all 0.2s; outline: none;
 }
-
 .field-input:focus {
   border-color: var(--rose);
-  box-shadow: 0 0 0 3px rgba(192,139,126,0.1);
+  box-shadow: 0 0 0 3px rgba(192,139,126,0.12);
 }
-
-textarea.field-input {
-  resize: vertical;
-  min-height: 80px;
-  line-height: 1.8;
-}
-
-/* ===== REPEATER (News, FAQ, Staff) ===== */
-.repeater-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--beige);
-}
-
-.repeater-header h3 {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.btn-add {
-  background: var(--rose);
-  color: white;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-add:hover { background: var(--rose-light); }
-
-.repeater-item {
-  background: var(--cream);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 12px;
-  position: relative;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-}
-
-.repeater-item:hover {
-  border-color: var(--beige);
-}
-
-.repeater-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.repeater-item-num {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--rose);
-  letter-spacing: 0.05em;
-}
-
-.btn-delete {
-  background: none;
-  border: none;
-  color: var(--text-light);
-  cursor: pointer;
-  font-size: 0.78rem;
-  padding: 4px 12px;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.btn-delete:hover {
-  background: rgba(212,86,78,0.1);
-  color: var(--red);
-}
-
-.field-inline {
-  display: flex;
-  gap: 12px;
-  align-items: end;
-}
-
-.field-inline .field-group {
-  margin-bottom: 0;
-}
-
-.field-inline .field-group:first-child {
-  flex-shrink: 0;
-  width: 130px;
-}
-
-.field-inline .field-group:nth-child(2) {
-  flex-shrink: 0;
-  width: 100px;
-}
-
-.field-inline .field-group:last-child {
-  flex: 1;
-}
-
+textarea.field-input { resize: vertical; min-height: 100px; line-height: 1.8; }
 select.field-input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A6B5D' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A6B5D' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 14px center;
   padding-right: 36px;
 }
+.field-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+@media (max-width: 420px) {
+  .field-row { grid-template-columns: 1fr; }
+}
+
+/* ===== REPEATER ===== */
+.repeater-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 16px;
+}
+.repeater-header h3 { font-size: 0.85rem; font-weight: 500; }
+.btn-add {
+  background: var(--rose); color: white; border: none;
+  padding: 8px 18px; border-radius: 8px; font-family: inherit;
+  font-size: 0.75rem; font-weight: 500; cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-add:hover { background: var(--rose-light); }
+.repeater-item {
+  background: var(--cream); border-radius: 12px;
+  padding: 18px 16px; margin-bottom: 10px;
+  border: 1px solid transparent; transition: all 0.2s;
+}
+.repeater-item:hover { border-color: var(--beige); }
+.repeater-item-head {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 10px;
+}
+.repeater-num {
+  font-size: 0.72rem; font-weight: 500;
+  color: var(--rose); letter-spacing: 0.05em;
+}
+.btn-delete {
+  background: none; border: none; color: var(--text-light);
+  cursor: pointer; font-size: 0.75rem; padding: 4px 10px;
+  border-radius: 6px; transition: all 0.2s;
+}
+.btn-delete:hover { background: rgba(212,86,78,0.1); color: var(--red); }
+
+/* ===== NEWS INLINE ===== */
+.news-fields {
+  display: grid; grid-template-columns: 110px 90px 1fr; gap: 8px;
+}
+@media (max-width: 500px) {
+  .news-fields { grid-template-columns: 1fr 1fr; }
+  .news-fields .field:last-child { grid-column: 1 / -1; }
+}
+
+/* ===== PHOTO UPLOAD ===== */
+.photo-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px; margin-top: 12px;
+}
+.photo-slot {
+  aspect-ratio: 1; border-radius: 10px;
+  border: 2px dashed var(--taupe); background: var(--cream);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; cursor: pointer; transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.photo-slot:hover { border-color: var(--rose); background: var(--beige); }
+.photo-slot-icon { font-size: 1.5rem; color: var(--text-light); margin-bottom: 4px; }
+.photo-slot-text { font-size: 0.6rem; color: var(--text-light); }
+.photo-slot img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; border-radius: 8px;
+}
+.photo-slot .photo-remove {
+  position: absolute; top: 4px; right: 4px;
+  background: rgba(0,0,0,0.5); color: white;
+  border: none; border-radius: 50%; width: 22px; height: 22px;
+  font-size: 0.7rem; cursor: pointer; display: none;
+  align-items: center; justify-content: center;
+}
+.photo-slot:hover .photo-remove { display: flex; }
+
+/* Staff photo - circle */
+.photo-slot-circle {
+  width: 80px; height: 80px; border-radius: 50%;
+}
+
+/* ===== BLOG EDITOR ===== */
+.blog-item {
+  background: var(--cream); border-radius: 12px;
+  padding: 18px 16px; margin-bottom: 10px;
+}
+.blog-toolbar {
+  display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;
+}
+.blog-toolbar button {
+  background: var(--white); border: 1px solid var(--beige);
+  border-radius: 6px; padding: 6px 10px; font-size: 0.72rem;
+  cursor: pointer; transition: all 0.2s; font-family: inherit;
+  color: var(--text-sub);
+}
+.blog-toolbar button:hover { border-color: var(--rose); color: var(--rose); }
+.blog-content {
+  width: 100%; min-height: 150px; padding: 14px 16px;
+  border: 1.5px solid var(--beige); border-radius: 10px;
+  font-family: inherit; font-size: 16px; color: var(--text);
+  background: var(--white); line-height: 1.9;
+  outline: none; resize: vertical;
+}
+
+/* ===== BLOG COVER IMAGE ===== */
+.blog-cover-upload {
+  width: 100%; aspect-ratio: 16/9; border-radius: 10px;
+  border: 2px dashed var(--taupe); background: var(--cream);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; cursor: pointer; transition: all 0.2s;
+  margin-bottom: 12px; position: relative; overflow: hidden;
+}
+.blog-cover-upload:hover { border-color: var(--rose); }
+.blog-cover-upload img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; border-radius: 8px;
+}
+
+/* ===== PREVIEW BUTTON ===== */
+.btn-preview {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--brown); color: var(--cream);
+  border: none; padding: 10px 20px; border-radius: 8px;
+  font-family: inherit; font-size: 0.78rem; cursor: pointer;
+  transition: all 0.2s; margin-top: 8px;
+}
+.btn-preview:hover { background: var(--dark); }
 
 /* ===== TOAST ===== */
 .toast {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: var(--dark);
-  color: var(--cream);
-  padding: 16px 28px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-  transform: translateY(100px);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  z-index: 200;
+  position: fixed; top: -60px; left: 50%; transform: translateX(-50%);
+  background: var(--dark); color: var(--cream);
+  padding: 14px 28px; border-radius: 12px;
+  font-size: 0.82rem; z-index: 200; transition: top 0.3s ease;
+  white-space: nowrap; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
+.toast.show { top: 20px; }
 
-.toast.show {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.toast.success { border-left: 4px solid var(--green); }
-.toast.error { border-left: 4px solid var(--red); }
-
-/* ===== PREVIEW LINK ===== */
-.preview-bar {
-  background: var(--cream);
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  font-size: 0.8rem;
-  color: var(--text-sub);
-  border-bottom: 1px solid var(--beige);
-}
-
-.preview-bar a {
-  color: var(--rose);
-  text-decoration: none;
-}
-
-.preview-bar a:hover { text-decoration: underline; }
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .panel { padding: 24px 20px; }
-  .field-row { grid-template-columns: 1fr; }
-  .field-inline { flex-direction: column; }
-  .field-inline .field-group:first-child,
-  .field-inline .field-group:nth-child(2) { width: 100%; }
-  .admin-header { flex-direction: column; gap: 12px; text-align: center; }
-  .tabs { gap: 2px; }
-  .tab { padding: 10px 16px; font-size: 0.75rem; }
+/* ===== PC STYLES ===== */
+@media (min-width: 769px) {
+  .bottom-nav {
+    position: static; max-width: 700px; margin: 16px auto 0;
+    border-radius: var(--radius); border: none;
+    box-shadow: var(--shadow); overflow: visible;
+  }
+  .bottom-nav .tab {
+    flex-direction: row; gap: 6px; font-size: 0.75rem;
+    padding: 14px 8px;
+  }
+  .save-float { bottom: 32px; right: 32px; }
+  body { padding-bottom: 20px; }
+  .panel-container { padding-bottom: 40px; }
 }
 </style>
 </head>
 <body>
 
-<header class="admin-header">
-  <h1>visino ebisu <span>管理画面</span></h1>
-  <div class="admin-actions">
-    <button class="btn-export" onclick="exportData()">📥 JSONエクスポート</button>
-    <button class="btn-save" onclick="saveData()">💾 保存する</button>
+<header class="header">
+  <h1>visino ebisu<small>管理画面</small></h1>
+  <div class="header-actions">
+    <button class="btn-preview" onclick="window.open('index.html','_blank')">👁 プレビュー</button>
+    <button class="btn-export" onclick="exportData()">📥 JSON出力</button>
   </div>
 </header>
 
-<div class="preview-bar">
-  <span>サイトプレビュー →</span>
-  <a href="index.html" target="_blank">index.html を開く</a>
-</div>
+<nav class="bottom-nav" id="bottomNav">
+  <button class="tab active" data-tab="news"><span class="tab-icon">📢</span>お知らせ</button>
+  <button class="tab" data-tab="info"><span class="tab-icon">🏠</span>基本情報</button>
+  <button class="tab" data-tab="photos"><span class="tab-icon">📷</span>写真</button>
+  <button class="tab" data-tab="kogao"><span class="tab-icon">✨</span>料金</button>
+  <button class="tab" data-tab="blog"><span class="tab-icon">📝</span>ブログ</button>
+  <button class="tab" data-tab="staff"><span class="tab-icon">👤</span>スタッフ</button>
+  <button class="tab" data-tab="faq"><span class="tab-icon">❓</span>FAQ</button>
+</nav>
 
-<div class="admin-body">
+<div class="panel-container">
 
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab active" data-tab="news">📢 お知らせ</button>
-    <button class="tab" data-tab="info">🏠 基本情報</button>
-    <button class="tab" data-tab="kogao">✨ 小顔矯正</button>
-    <button class="tab" data-tab="staff">👤 スタッフ</button>
-    <button class="tab" data-tab="faq">❓ FAQ</button>
-  </div>
-
-  <!-- ===== NEWS PANEL ===== -->
+  <!-- ===== NEWS ===== -->
   <div class="panel active" id="panel-news">
     <h2 class="panel-title">お知らせ管理</h2>
-    <p class="panel-desc">最新のお知らせが上に表示されます。年末年始の休業案内や定休日の変更などにお使いください。</p>
-    
-    <div class="repeater-header">
-      <h3>お知らせ一覧</h3>
-      <button class="btn-add" onclick="addNews()">＋ 追加</button>
+    <p class="panel-desc">最新のお知らせが上に表示されます。</p>
+    <div class="card">
+      <div class="repeater-header">
+        <h3>お知らせ一覧</h3>
+        <button class="btn-add" onclick="addNews()">＋ 追加</button>
+      </div>
+      <div id="newsRepeater"></div>
     </div>
-    <div id="newsRepeater"></div>
   </div>
 
-  <!-- ===== INFO PANEL ===== -->
+  <!-- ===== BASIC INFO ===== -->
   <div class="panel" id="panel-info">
     <h2 class="panel-title">基本情報</h2>
-    <p class="panel-desc">サロンの住所・営業時間・連絡先を編集できます。</p>
+    <p class="panel-desc">住所・電話番号・営業時間などの基本情報です。</p>
 
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">郵便番号</label>
-        <input class="field-input" id="info-postalCode" type="text">
+    <div class="card">
+      <div class="card-title">📍 所在地</div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">郵便番号</label>
+          <input class="field-input" id="info-postalCode" placeholder="150-0013">
+        </div>
+        <div class="field">
+          <label class="field-label">住所</label>
+          <input class="field-input" id="info-address" placeholder="東京都渋谷区恵比寿 2-12-17">
+        </div>
       </div>
-      <div class="field-group">
-        <label class="field-label">住所</label>
-        <input class="field-input" id="info-address" type="text">
+      <div class="field">
+        <label class="field-label">アクセス補足</label>
+        <input class="field-input" id="info-accessNote" placeholder="JR恵比寿駅（東口）より徒歩8分">
       </div>
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">アクセス補足</label>
-      <input class="field-input" id="info-accessNote" type="text">
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">目印・備考</label>
-      <input class="field-input" id="info-landmark" type="text">
-    </div>
-
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">営業時間（平日）</label>
-        <input class="field-input" id="info-hoursWeekday" type="text">
-      </div>
-      <div class="field-group">
-        <label class="field-label">営業時間（土日祝）</label>
-        <input class="field-input" id="info-hoursWeekend" type="text">
+      <div class="field">
+        <label class="field-label">目印</label>
+        <input class="field-input" id="info-landmark" placeholder="1Fの赤い車が目印です">
       </div>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">定休日</label>
-      <input class="field-input" id="info-closedDays" type="text">
+    <div class="card">
+      <div class="card-title">🕐 営業時間</div>
+      <div class="field">
+        <label class="field-label">平日</label>
+        <input class="field-input" id="info-hoursWeekday" placeholder="10:00〜20:30（最終受付 20:00）">
+      </div>
+      <div class="field">
+        <label class="field-label">土日祝</label>
+        <input class="field-input" id="info-hoursWeekend" placeholder="10:00〜18:00（最終受付 17:30）">
+      </div>
+      <div class="field">
+        <label class="field-label">定休日</label>
+        <input class="field-input" id="info-closedDays" placeholder="毎週木曜日、隔週水曜日">
+      </div>
     </div>
 
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">電話番号（小顔矯正）</label>
-        <input class="field-input" id="info-phoneKogao" type="text">
+    <div class="card">
+      <div class="card-title">📞 連絡先</div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">電話番号（小顔矯正）</label>
+          <input class="field-input" id="info-phoneKogao" type="tel" placeholder="090-5822-0333">
+        </div>
+        <div class="field">
+          <label class="field-label">電話番号（ネイル）</label>
+          <input class="field-input" id="info-phoneNail" type="tel" placeholder="080-9663-8460">
+        </div>
       </div>
-      <div class="field-group">
-        <label class="field-label">電話番号（ネイル）</label>
-        <input class="field-input" id="info-phoneNail" type="text">
-      </div>
-    </div>
-
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">LINE ID</label>
-        <input class="field-input" id="info-lineId" type="text">
-      </div>
-      <div class="field-group">
-        <label class="field-label">Instagram ID</label>
-        <input class="field-input" id="info-instagram" type="text">
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">LINE ID</label>
+          <input class="field-input" id="info-lineId" placeholder="onn9415k">
+        </div>
+        <div class="field">
+          <label class="field-label">Instagram</label>
+          <input class="field-input" id="info-instagram" placeholder="visino333">
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== KOGAO PANEL ===== -->
+  <!-- ===== PHOTOS ===== -->
+  <div class="panel" id="panel-photos">
+    <h2 class="panel-title">写真管理</h2>
+    <p class="panel-desc">サロンの写真をアップロードできます。<br>※Firebase移行後に保存・反映が有効になります。</p>
+
+    <div class="card">
+      <div class="card-title">🏠 サロン写真（ヒーロー画像）</div>
+      <p style="font-size:0.75rem;color:var(--text-light);margin-bottom:12px">トップページのメイン写真です。横長の写真が最適です。</p>
+      <div class="photo-slot" style="aspect-ratio:16/9;max-width:100%" onclick="this.querySelector('input').click()">
+        <input type="file" accept="image/*" hidden onchange="previewPhoto(this,'heroPreview')">
+        <img id="heroPreview" style="display:none">
+        <span class="photo-slot-icon">📷</span>
+        <span class="photo-slot-text">タップして写真を選択</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏡 サロン外観・内装</div>
+      <p style="font-size:0.75rem;color:var(--text-light);margin-bottom:12px">複数枚アップロードできます。</p>
+      <div class="photo-grid" id="salonPhotoGrid">
+        <div class="photo-slot" onclick="this.querySelector('input').click()">
+          <input type="file" accept="image/*" hidden onchange="previewPhoto(this)">
+          <span class="photo-slot-icon">＋</span>
+          <span class="photo-slot-text">追加</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🐕 看板犬</div>
+      <div class="photo-grid" id="dogPhotoGrid">
+        <div class="photo-slot" onclick="this.querySelector('input').click()">
+          <input type="file" accept="image/*" hidden onchange="previewPhoto(this)">
+          <span class="photo-slot-icon">＋</span>
+          <span class="photo-slot-text">追加</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💅 ネイルギャラリー</div>
+      <div class="photo-grid" id="nailPhotoGrid">
+        <div class="photo-slot" onclick="this.querySelector('input').click()">
+          <input type="file" accept="image/*" hidden onchange="previewPhoto(this)">
+          <span class="photo-slot-icon">＋</span>
+          <span class="photo-slot-text">追加</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== KOGAO PRICING ===== -->
   <div class="panel" id="panel-kogao">
-    <h2 class="panel-title">小顔矯正の料金設定</h2>
-    <p class="panel-desc">料金やコース内容を変更できます。</p>
+    <h2 class="panel-title">小顔矯正 料金設定</h2>
+    <p class="panel-desc">施術料金やブライダルコースの設定です。</p>
 
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">施術料金</label>
-        <input class="field-input" id="kogao-price" type="text" placeholder="4,000">
+    <div class="card">
+      <div class="card-title">💰 通常メニュー</div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">施術料金</label>
+          <input class="field-input" id="kogao-price" placeholder="4,000">
+        </div>
+        <div class="field">
+          <label class="field-label">税表記</label>
+          <select class="field-input" id="kogao-priceTax">
+            <option value="税別">税別</option>
+            <option value="税込">税込</option>
+          </select>
+        </div>
       </div>
-      <div class="field-group">
-        <label class="field-label">税表記</label>
-        <input class="field-input" id="kogao-priceTax" type="text" placeholder="税別">
+      <div class="field">
+        <label class="field-label">施術時間</label>
+        <input class="field-input" id="kogao-duration" placeholder="25分">
       </div>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">施術時間</label>
-      <input class="field-input" id="kogao-duration" type="text" placeholder="25分">
-    </div>
-
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">ブライダルコース料金</label>
-        <input class="field-input" id="kogao-bridalPrice" type="text" placeholder="20,000">
+    <div class="card">
+      <div class="card-title">💐 ブライダルコース</div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">料金</label>
+          <input class="field-input" id="kogao-bridalPrice" placeholder="20,000">
+        </div>
+        <div class="field">
+          <label class="field-label">税表記</label>
+          <select class="field-input" id="kogao-bridalPriceTax">
+            <option value="税込">税込</option>
+            <option value="税別">税別</option>
+          </select>
+        </div>
       </div>
-      <div class="field-group">
-        <label class="field-label">ブライダル税表記</label>
-        <input class="field-input" id="kogao-bridalPriceTax" type="text" placeholder="税込">
-      </div>
-    </div>
-
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">ブライダル回数</label>
-        <input class="field-input" id="kogao-bridalSessions" type="text" placeholder="全5回">
-      </div>
-      <div class="field-group">
-        <label class="field-label">ブライダル有効期限</label>
-        <input class="field-input" id="kogao-bridalExpiry" type="text" placeholder="有効期限45日間">
-      </div>
-    </div>
-
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">紹介割引額</label>
-        <input class="field-input" id="kogao-referralDiscount" type="text" placeholder="500">
-      </div>
-      <div class="field-group">
-        <label class="field-label">キャンセル料</label>
-        <input class="field-input" id="kogao-cancelFee" type="text" placeholder="4,300">
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">回数</label>
+          <input class="field-input" id="kogao-bridalSessions" placeholder="全5回">
+        </div>
+        <div class="field">
+          <label class="field-label">有効期限</label>
+          <input class="field-input" id="kogao-bridalExpiry" placeholder="有効期限45日間">
+        </div>
       </div>
     </div>
 
-    <div class="field-group">
-      <label class="field-label">定休日</label>
-      <input class="field-input" id="kogao-closedDays" type="text" placeholder="毎週木曜日、隔週水曜日">
+    <div class="card">
+      <div class="card-title">📋 その他</div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">紹介割引額</label>
+          <input class="field-input" id="kogao-referralDiscount" placeholder="500">
+        </div>
+        <div class="field">
+          <label class="field-label">キャンセル料</label>
+          <input class="field-input" id="kogao-cancelFee" placeholder="4,300">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">定休日</label>
+        <input class="field-input" id="kogao-closedDays" placeholder="毎週木曜日、隔週水曜日">
+      </div>
     </div>
   </div>
 
-  <!-- ===== STAFF PANEL ===== -->
+  <!-- ===== BLOG ===== -->
+  <div class="panel" id="panel-blog">
+    <h2 class="panel-title">ブログ・コラム</h2>
+    <p class="panel-desc">SEO効果を高める記事を投稿できます。「恵比寿 小顔矯正」等のキーワードを含めると効果的です。</p>
+
+    <div class="card">
+      <div class="repeater-header">
+        <h3>記事一覧</h3>
+        <button class="btn-add" onclick="addBlog()">＋ 新規投稿</button>
+      </div>
+      <div id="blogRepeater"></div>
+    </div>
+  </div>
+
+  <!-- ===== STAFF ===== -->
   <div class="panel" id="panel-staff">
     <h2 class="panel-title">スタッフ管理</h2>
-    <p class="panel-desc">スタッフの名前・役職・紹介文を編集できます。</p>
+    <p class="panel-desc">スタッフの名前・役職・紹介文・写真を管理できます。</p>
 
-    <div class="repeater-header">
-      <h3>スタッフ一覧</h3>
-      <button class="btn-add" onclick="addStaff()">＋ 追加</button>
+    <div class="card">
+      <div class="repeater-header">
+        <h3>スタッフ一覧</h3>
+        <button class="btn-add" onclick="addStaff()">＋ 追加</button>
+      </div>
+      <div id="staffRepeater"></div>
     </div>
-    <div id="staffRepeater"></div>
   </div>
 
-  <!-- ===== FAQ PANEL ===== -->
+  <!-- ===== FAQ ===== -->
   <div class="panel" id="panel-faq">
     <h2 class="panel-title">よくある質問</h2>
-    <p class="panel-desc">質問と回答のペアを管理できます。お客様からよく聞かれる質問を追加してください。</p>
+    <p class="panel-desc">お客様からよく聞かれる質問を管理できます。</p>
 
-    <div class="repeater-header">
-      <h3>FAQ一覧</h3>
-      <button class="btn-add" onclick="addFaq()">＋ 追加</button>
+    <div class="card">
+      <div class="repeater-header">
+        <h3>FAQ一覧</h3>
+        <button class="btn-add" onclick="addFaq()">＋ 追加</button>
+      </div>
+      <div id="faqRepeater"></div>
     </div>
-    <div id="faqRepeater"></div>
   </div>
 
 </div>
 
+<button class="save-float" onclick="saveData()">💾 保存する</button>
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== DATA =====
 let siteData = null;
 
-// Load data
+// ===== LOAD =====
 async function loadData() {
-  try {
-    const res = await fetch('site-data.json');
-    siteData = await res.json();
-  } catch(e) {
-    // Default data if no file
-    siteData = getDefaultData();
+  // localStorage first
+  const stored = localStorage.getItem('visino-site-data');
+  if (stored) { try { siteData = JSON.parse(stored); } catch(e) {} }
+  // then JSON file
+  if (!siteData) {
+    try { const r = await fetch('site-data.json'); if (r.ok) siteData = await r.json(); } catch(e) {}
   }
+  if (!siteData) siteData = getDefault();
+  // Ensure blog array exists
+  if (!siteData.blog) siteData.blog = [];
+  if (!siteData.photos) siteData.photos = { hero: '', salon: [], dog: [], nail: [] };
   populateAll();
 }
 
-function getDefaultData() {
+function getDefault() {
   return {
     siteInfo: { salonName:"visino ebisu", address:"", postalCode:"", accessNote:"", landmark:"", hoursWeekday:"", hoursWeekend:"", closedDays:"", phoneKogao:"", phoneNail:"", lineId:"", instagram:"" },
-    news: [],
+    news: [], blog: [],
     kogao: { price:"4,000", priceTax:"税別", duration:"25分", bridalPrice:"20,000", bridalPriceTax:"税込", bridalSessions:"全5回", bridalExpiry:"有効期限45日間", referralDiscount:"500", cancelFee:"4,300", closedDays:"" },
-    staff: [],
-    faq: []
+    staff: [], faq: [],
+    photos: { hero: '', salon: [], dog: [], nail: [] }
   };
 }
 
-// ===== POPULATE ALL =====
+// ===== POPULATE =====
 function populateAll() {
-  // Site info
   const info = siteData.siteInfo;
-  Object.keys(info).forEach(key => {
-    const el = document.getElementById('info-' + key);
-    if (el) el.value = info[key] || '';
+  Object.keys(info).forEach(k => {
+    const el = document.getElementById('info-' + k);
+    if (el) el.value = info[k] || '';
   });
-
-  // Kogao
   const kg = siteData.kogao;
-  Object.keys(kg).forEach(key => {
-    const el = document.getElementById('kogao-' + key);
-    if (el) el.value = kg[key] || '';
+  Object.keys(kg).forEach(k => {
+    const el = document.getElementById('kogao-' + k);
+    if (el) el.value = kg[k] || '';
   });
-
-  // Repeaters
   renderNews();
+  renderBlog();
   renderStaff();
   renderFaq();
 }
 
-// ===== NEWS REPEATER =====
+// ===== NEWS =====
 function renderNews() {
-  const container = document.getElementById('newsRepeater');
-  container.innerHTML = siteData.news.map((item, i) => `
+  document.getElementById('newsRepeater').innerHTML = siteData.news.map((n, i) => `
     <div class="repeater-item">
-      <div class="repeater-item-header">
-        <span class="repeater-item-num">#${i + 1}</span>
-        <button class="btn-delete" onclick="deleteNews(${i})">🗑 削除</button>
+      <div class="repeater-item-head">
+        <span class="repeater-num">#${i+1}</span>
+        <button class="btn-delete" onclick="deleteItem('news',${i})">🗑</button>
       </div>
-      <div class="field-inline">
-        <div class="field-group">
+      <div class="news-fields">
+        <div class="field">
           <label class="field-label">日付</label>
-          <input class="field-input" value="${item.date}" onchange="siteData.news[${i}].date=this.value">
+          <input class="field-input" value="${n.date}" onchange="siteData.news[${i}].date=this.value">
         </div>
-        <div class="field-group">
+        <div class="field">
           <label class="field-label">タグ</label>
-          <select class="field-input" onchange="siteData.news[${i}].tag=this.options[this.selectedIndex].text; siteData.news[${i}].tagType=this.value">
-            <option value="info" ${item.tagType==='info'?'selected':''}>お知らせ</option>
-            <option value="important" ${item.tagType==='important'?'selected':''}>重要</option>
+          <select class="field-input" onchange="siteData.news[${i}].tag=this.options[this.selectedIndex].text;siteData.news[${i}].tagType=this.value">
+            <option value="info" ${n.tagType==='info'?'selected':''}>お知らせ</option>
+            <option value="important" ${n.tagType==='important'?'selected':''}>重要</option>
           </select>
         </div>
-        <div class="field-group">
+        <div class="field">
           <label class="field-label">内容</label>
-          <input class="field-input" value="${escapeHtml(item.text)}" onchange="siteData.news[${i}].text=this.value">
+          <input class="field-input" value="${esc(n.text)}" onchange="siteData.news[${i}].text=this.value">
         </div>
       </div>
     </div>
   `).join('');
 }
-
 function addNews() {
-  siteData.news.unshift({ date: new Date().toISOString().slice(0,10).replace(/-/g,'.'), tag: 'お知らせ', tagType: 'info', text: '' });
-  renderNews();
-  showToast('お知らせを追加しました', 'success');
+  siteData.news.unshift({ date: today(), tag:'お知らせ', tagType:'info', text:'' });
+  renderNews(); toast('お知らせを追加しました');
 }
 
-function deleteNews(i) {
-  if (confirm('このお知らせを削除しますか？')) {
-    siteData.news.splice(i, 1);
-    renderNews();
-    showToast('削除しました', 'success');
-  }
-}
-
-// ===== STAFF REPEATER =====
-function renderStaff() {
-  const container = document.getElementById('staffRepeater');
-  container.innerHTML = siteData.staff.map((item, i) => `
-    <div class="repeater-item">
-      <div class="repeater-item-header">
-        <span class="repeater-item-num">#${i + 1}</span>
-        <button class="btn-delete" onclick="deleteStaff(${i})">🗑 削除</button>
+// ===== BLOG =====
+function renderBlog() {
+  document.getElementById('blogRepeater').innerHTML = siteData.blog.map((b, i) => `
+    <div class="blog-item">
+      <div class="repeater-item-head">
+        <span class="repeater-num">📝 ${b.title || '新しい記事'}</span>
+        <button class="btn-delete" onclick="deleteItem('blog',${i})">🗑</button>
+      </div>
+      <div class="field" style="margin-bottom:12px">
+        <label class="field-label">カバー画像</label>
+        <div class="blog-cover-upload" onclick="this.querySelector('input').click()">
+          <input type="file" accept="image/*" hidden onchange="previewBlogCover(this,${i})">
+          ${b.coverUrl ? '<img src="'+esc(b.coverUrl)+'" style="display:block">' : ''}
+          <span class="photo-slot-icon">${b.coverUrl ? '' : '📷'}</span>
+          <span class="photo-slot-text">${b.coverUrl ? '' : 'カバー画像を選択'}</span>
+        </div>
       </div>
       <div class="field-row" style="margin-bottom:12px">
-        <div class="field-group">
-          <label class="field-label">名前（英語）</label>
-          <input class="field-input" value="${escapeHtml(item.nameEn)}" onchange="siteData.staff[${i}].nameEn=this.value">
+        <div class="field">
+          <label class="field-label">公開日</label>
+          <input class="field-input" type="date" value="${b.date||''}" onchange="siteData.blog[${i}].date=this.value">
         </div>
-        <div class="field-group">
-          <label class="field-label">役職</label>
-          <input class="field-input" value="${escapeHtml(item.role)}" onchange="siteData.staff[${i}].role=this.value">
+        <div class="field">
+          <label class="field-label">カテゴリ</label>
+          <select class="field-input" onchange="siteData.blog[${i}].category=this.value">
+            <option value="小顔矯正" ${b.category==='小顔矯正'?'selected':''}>小顔矯正</option>
+            <option value="ネイル" ${b.category==='ネイル'?'selected':''}>ネイル</option>
+            <option value="お知らせ" ${b.category==='お知らせ'?'selected':''}>お知らせ</option>
+            <option value="日常" ${b.category==='日常'?'selected':''}>日常</option>
+          </select>
         </div>
       </div>
-      <div class="field-group" style="margin-bottom:0">
-        <label class="field-label">紹介文</label>
-        <textarea class="field-input" onchange="siteData.staff[${i}].description=this.value">${escapeHtml(item.description)}</textarea>
+      <div class="field" style="margin-bottom:12px">
+        <label class="field-label">タイトル</label>
+        <input class="field-input" value="${esc(b.title||'')}" onchange="siteData.blog[${i}].title=this.value" placeholder="記事のタイトル">
+      </div>
+      <div class="field">
+        <label class="field-label">本文</label>
+        <textarea class="blog-content" onchange="siteData.blog[${i}].body=this.value" placeholder="記事の本文を入力...&#10;&#10;改行で段落が分かれます。">${esc(b.body||'')}</textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">
+          <input type="checkbox" ${b.published?'checked':''} onchange="siteData.blog[${i}].published=this.checked" style="margin-right:6px">
+          公開する
+        </label>
       </div>
     </div>
-  `).join('');
+  `).join('') || '<p style="color:var(--text-light);font-size:0.82rem;text-align:center;padding:32px 0">まだ記事がありません。「＋ 新規投稿」で記事を作成できます。</p>';
+}
+function addBlog() {
+  siteData.blog.unshift({ date: todayISO(), title:'', body:'', category:'小顔矯正', published: false, coverUrl:'' });
+  renderBlog(); toast('新しい記事を追加しました');
+}
+function previewBlogCover(input, index) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    siteData.blog[index].coverUrl = e.target.result;
+    renderBlog();
+  };
+  reader.readAsDataURL(file);
 }
 
-function addStaff() {
-  siteData.staff.push({ nameEn: '', role: '', description: '' });
-  renderStaff();
-  showToast('スタッフを追加しました', 'success');
-}
-
-function deleteStaff(i) {
-  if (confirm('このスタッフを削除しますか？')) {
-    siteData.staff.splice(i, 1);
-    renderStaff();
-    showToast('削除しました', 'success');
-  }
-}
-
-// ===== FAQ REPEATER =====
-function renderFaq() {
-  const container = document.getElementById('faqRepeater');
-  container.innerHTML = siteData.faq.map((item, i) => `
+// ===== STAFF =====
+function renderStaff() {
+  document.getElementById('staffRepeater').innerHTML = siteData.staff.map((s, i) => `
     <div class="repeater-item">
-      <div class="repeater-item-header">
-        <span class="repeater-item-num">Q${i + 1}</span>
-        <button class="btn-delete" onclick="deleteFaq(${i})">🗑 削除</button>
+      <div class="repeater-item-head">
+        <span class="repeater-num">#${i+1}</span>
+        <button class="btn-delete" onclick="deleteItem('staff',${i})">🗑</button>
       </div>
-      <div class="field-group" style="margin-bottom:12px">
-        <label class="field-label">質問</label>
-        <input class="field-input" value="${escapeHtml(item.question)}" onchange="siteData.faq[${i}].question=this.value">
+      <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:12px">
+        <div class="photo-slot photo-slot-circle" onclick="this.querySelector('input').click()">
+          <input type="file" accept="image/*" hidden onchange="previewStaffPhoto(this,${i})">
+          ${s.photo ? '<img src="'+esc(s.photo)+'" style="display:block">' : ''}
+          <span class="photo-slot-icon" style="font-size:1rem">${s.photo ? '' : '📷'}</span>
+        </div>
+        <div style="flex:1">
+          <div class="field" style="margin-bottom:8px">
+            <label class="field-label">名前</label>
+            <input class="field-input" value="${esc(s.nameEn)}" onchange="siteData.staff[${i}].nameEn=this.value">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label class="field-label">役職</label>
+            <input class="field-input" value="${esc(s.role)}" onchange="siteData.staff[${i}].role=this.value">
+          </div>
+        </div>
       </div>
-      <div class="field-group" style="margin-bottom:0">
-        <label class="field-label">回答</label>
-        <textarea class="field-input" onchange="siteData.faq[${i}].answer=this.value">${escapeHtml(item.answer)}</textarea>
+      <div class="field" style="margin-bottom:0">
+        <label class="field-label">紹介文</label>
+        <textarea class="field-input" onchange="siteData.staff[${i}].description=this.value">${esc(s.description)}</textarea>
       </div>
     </div>
   `).join('');
 }
-
-function addFaq() {
-  siteData.faq.push({ question: '', answer: '' });
-  renderFaq();
-  showToast('FAQを追加しました', 'success');
+function addStaff() {
+  siteData.staff.push({ nameEn:'', role:'', description:'', photo:'' });
+  renderStaff(); toast('スタッフを追加しました');
+}
+function previewStaffPhoto(input, index) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    siteData.staff[index].photo = e.target.result;
+    renderStaff();
+  };
+  reader.readAsDataURL(file);
 }
 
-function deleteFaq(i) {
-  if (confirm('このFAQを削除しますか？')) {
-    siteData.faq.splice(i, 1);
-    renderFaq();
-    showToast('削除しました', 'success');
+// ===== FAQ =====
+function renderFaq() {
+  document.getElementById('faqRepeater').innerHTML = siteData.faq.map((f, i) => `
+    <div class="repeater-item">
+      <div class="repeater-item-head">
+        <span class="repeater-num">Q${i+1}</span>
+        <button class="btn-delete" onclick="deleteItem('faq',${i})">🗑</button>
+      </div>
+      <div class="field" style="margin-bottom:10px">
+        <label class="field-label">質問</label>
+        <input class="field-input" value="${esc(f.question)}" onchange="siteData.faq[${i}].question=this.value">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label class="field-label">回答</label>
+        <textarea class="field-input" onchange="siteData.faq[${i}].answer=this.value">${esc(f.answer)}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+function addFaq() {
+  siteData.faq.push({ question:'', answer:'' });
+  renderFaq(); toast('FAQを追加しました');
+}
+
+// ===== PHOTO PREVIEW =====
+function previewPhoto(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    if (previewId) {
+      const img = document.getElementById(previewId);
+      img.src = e.target.result; img.style.display = 'block';
+    } else {
+      // Show preview in the slot
+      const slot = input.parentElement;
+      let img = slot.querySelector('img');
+      if (!img) { img = document.createElement('img'); slot.appendChild(img); }
+      img.src = e.target.result; img.style.display = 'block';
+      // Add new empty slot
+      addEmptySlot(slot.parentElement);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function addEmptySlot(grid) {
+  // Only add if last slot is filled
+  const slots = grid.querySelectorAll('.photo-slot');
+  const last = slots[slots.length - 1];
+  if (last && last.querySelector('img[style*="display: block"], img[style*="display:block"]')) {
+    const newSlot = document.createElement('div');
+    newSlot.className = 'photo-slot';
+    newSlot.onclick = function() { this.querySelector('input').click(); };
+    newSlot.innerHTML = '<input type="file" accept="image/*" hidden onchange="previewPhoto(this)"><span class="photo-slot-icon">＋</span><span class="photo-slot-text">追加</span>';
+    grid.appendChild(newSlot);
   }
 }
 
-// ===== COLLECT DATA =====
+// ===== GENERIC DELETE =====
+function deleteItem(type, i) {
+  if (confirm('削除しますか？')) {
+    siteData[type].splice(i, 1);
+    if (type === 'news') renderNews();
+    else if (type === 'blog') renderBlog();
+    else if (type === 'staff') renderStaff();
+    else if (type === 'faq') renderFaq();
+    toast('削除しました');
+  }
+}
+
+// ===== COLLECT & SAVE =====
 function collectData() {
-  // Collect siteInfo
-  const infoKeys = ['postalCode','address','accessNote','landmark','hoursWeekday','hoursWeekend','closedDays','phoneKogao','phoneNail','lineId','instagram'];
-  infoKeys.forEach(key => {
-    const el = document.getElementById('info-' + key);
-    if (el) siteData.siteInfo[key] = el.value;
+  ['postalCode','address','accessNote','landmark','hoursWeekday','hoursWeekend','closedDays','phoneKogao','phoneNail','lineId','instagram'].forEach(k => {
+    const el = document.getElementById('info-' + k);
+    if (el) siteData.siteInfo[k] = el.value;
   });
-
-  // Collect kogao
-  const kogaoKeys = ['price','priceTax','duration','bridalPrice','bridalPriceTax','bridalSessions','bridalExpiry','referralDiscount','cancelFee','closedDays'];
-  kogaoKeys.forEach(key => {
-    const el = document.getElementById('kogao-' + key);
-    if (el) siteData.kogao[key] = el.value;
+  ['price','priceTax','duration','bridalPrice','bridalPriceTax','bridalSessions','bridalExpiry','referralDiscount','cancelFee','closedDays'].forEach(k => {
+    const el = document.getElementById('kogao-' + k);
+    if (el) siteData.kogao[k] = el.value;
   });
-
   return siteData;
 }
 
-// ===== SAVE =====
 function saveData() {
   const data = collectData();
-  
-  // Save to localStorage for preview
   localStorage.setItem('visino-site-data', JSON.stringify(data));
-  showToast('✅ 保存しました！サイトに反映されています。', 'success');
+  toast('✅ 保存しました！');
 }
 
-// ===== EXPORT =====
 function exportData() {
   const data = collectData();
-  const json = JSON.stringify(data, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'site-data.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  
-  showToast('📥 site-data.json をダウンロードしました', 'success');
-}
-
-// ===== UTILS =====
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function showToast(msg, type) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.className = 'toast show ' + (type || '');
-  setTimeout(() => { toast.className = 'toast'; }, 3000);
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'site-data.json'; a.click();
+  toast('📥 JSONをダウンロードしました');
 }
 
 // ===== TABS =====
@@ -794,12 +854,22 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    window.scrollTo(0, 0);
   });
 });
+
+// ===== UTILS =====
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function today() { return new Date().toISOString().slice(0,10).replace(/-/g,'.'); }
+function todayISO() { return new Date().toISOString().slice(0,10); }
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show';
+  setTimeout(() => t.className = 'toast', 2500);
+}
 
 // ===== INIT =====
 loadData();
 </script>
-
 </body>
 </html>
